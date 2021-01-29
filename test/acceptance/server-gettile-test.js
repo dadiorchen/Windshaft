@@ -28,7 +28,13 @@ describe('server_gettile', function () {
     /// /////////////////////////////////////////////////////////////////
 
     it("get'ing a tile with default style should return an expected tile", function (done) {
+      console.log("TestClient:", TestClient);
         new TestClient(TestClient.defaultTableMapConfig('test_table'))
+            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
+    });
+
+    it.only("first tree tile", function (done) {
+        new TestClient(TestClient.defaultTableMapConfig('trees'))
             .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
     });
 
