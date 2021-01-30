@@ -199,8 +199,8 @@ CREATE TABLE trees (
 
 INSERT INTO trees (name, the_geom)
 VALUES
- ('dadior', '0101000020E6100000A6B73F170D990DC064E8D84125364440'),
- ('zaven', '0101000020E6100000C90567F0F7AB0DC0AB07CC43A6364440');
+ ('', ST_SetSRID(ST_MakePoint(37.60050666666667,-3.1791800000000006), 4326)),
+ ('', ST_SetSRID(ST_MakePoint(36.627717,-3.264760), 4326));
 UPDATE trees SET the_geom_webmercator = ST_Transform(the_geom, 3857);
 
 CREATE INDEX trees_the_geom_idx ON trees USING gist (the_geom);
