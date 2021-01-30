@@ -179,3 +179,34 @@ CREATE INDEX _world_borders_extract_the_geom_webmercator_idx ON world_borders_ex
 VACUUM ANALYZE test_table;
 VACUUM ANALYZE test_table_2;
 VACUUM ANALYZE test_table_3;
+
+
+-- trees table
+CREATE TABLE trees (
+    updated_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    id serial NOT NULL PRIMARY KEY,
+    name character varying,
+    the_geom geometry,
+    the_geom_webmercator geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
+    CONSTRAINT enforce_dims_the_geom_webmercator CHECK ((st_ndims(the_geom_webmercator) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'POINT'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom_webmercator CHECK (((geometrytype(the_geom_webmercator) = 'POINT'::text) OR (the_geom_webmercator IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
+    CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
+);
+
+INSERT INTO trees (name, the_geom)
+VALUES
+ ('dadior', '0101000020E6100000A6B73F170D990DC064E8D84125364440'),
+ ('zaven', '0101000020E6100000C90567F0F7AB0DC0AB07CC43A6364440');
+UPDATE trees SET the_geom_webmercator = ST_Transform(the_geom, 3857);
+
+CREATE INDEX trees_the_geom_idx ON trees USING gist (the_geom);
+CREATE INDEX trees_the_geom_webmercator_idx ON trees USING gist (the_geom_webmercator);
+
+CREATE FUNCTION trees_inserter(geometry, text) returns int AS $$
+ INSERT INTO trees(name, the_geom, the_geom_webmercator)
+  SELECT $2, $1, ST_Transform($1, 3857) RETURNING id;
+$$ LANGUAGE 'sql' SECURITY DEFINER;

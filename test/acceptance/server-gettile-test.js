@@ -23,19 +23,29 @@ describe('server_gettile', function () {
 
     /// /////////////////////////////////////////////////////////////////
     //
-    // GET TILE
-    // --{
+    // GET TILE --{
     /// /////////////////////////////////////////////////////////////////
 
-    it("get'ing a tile with default style should return an expected tile", function (done) {
-      console.log("TestClient:", TestClient);
+    it('geting a tile with default style should return an expected tile',
+      function (done) {
+        console.log('TestClient:', TestClient);
         new TestClient(TestClient.defaultTableMapConfig('test_table'))
             .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
     });
 
-    it.only("first tree tile", function (done) {
+    it.only('first tree tile', function (done) {
+//        new TestClient(TestClient.defaultTableMapConfig('trees'))
+//            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
         new TestClient(TestClient.defaultTableMapConfig('trees'))
-            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
+            .getTile(13, 4011, 3088, (err, tile, img, headers, stats) => {
+              console.log('err:', err);
+              console.log('tile:', tile);
+              console.log('img:', img);
+              console.log('headers:', headers);
+              console.log('stats:', stats);
+              img.saveSync('/root/temp/1.png');
+              done();
+            });
     });
 
     it('response of get tile can be served by renderer cache', function (done) {

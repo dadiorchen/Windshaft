@@ -60,7 +60,6 @@
         "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
         "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
         "preinstall": "scripts/darwin-pre-install.sh",
-        "pretest:setup": "npm run lint",
         "test:setup": "NODE_ENV=test node test setup",
         "pretest": "npm run test:setup",
         "test": "NODE_ENV=test PGUSER=postgres mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit",
