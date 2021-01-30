@@ -10,8 +10,23 @@
 
     <script>
         $(document).ready(function(){
+          var map = new L.Map('map');
+          var baseURL_def = "http://142.93.19.234:28000";
+          layers = [];
+          // remove previous layers
+          layers.forEach(function(layer){
+            map.removeLayer(layer)
+          });
+//          var baseURL = $('#baseurl').val() + '/' + token;
+          var tileLayer = new L.tileLayer(baseURL_def + '/{z}/{x}/{y}.png');
+          map.addLayer(tileLayer);
+          layers.push(tileLayer);
+          map.setView(new L.LatLng(0, 0), 1, true);
+
+          return;
             var map = new L.Map('map');
-            var baseURL_def = "http://localhost:4000/database/template_postgis/layergroup";
+//            var baseURL_def = "http://localhost:4000/database/template_postgis/layergroup";
+            var baseURL_def = "http://142.93.19.234:28000";
             var mapConfig_def = JSON.stringify({
               version:"1.2.0",
               layers:[
