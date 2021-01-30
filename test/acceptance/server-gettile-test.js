@@ -34,18 +34,49 @@ describe('server_gettile', function () {
     });
 
     it.only('first tree tile', function (done) {
+      this.timeout(1000*10*60*60);
 //        new TestClient(TestClient.defaultTableMapConfig('trees'))
 //            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
-        new TestClient(TestClient.defaultTableMapConfig('trees'))
-            .getTile(13, 4011, 3088, (err, tile, img, headers, stats) => {
+//        new TestClient(TestClient.defaultTableMapConfig('trees'))
+//            .getTile(1, 1, 0, (err, tile, img, headers, stats) => {
+//              console.log('err:', err);
+//              console.log('tile:', tile);
+//              console.log('img:', img);
+//              console.log('headers:', headers);
+//              console.log('stats:', stats);
+//              img.saveSync('/root/temp/1.png');
+////              done();
+//            });
+      //express server
+      const express = require("express");
+      const app = express();
+      app.get("/", async (req, res) => {
+        res.send("welcome!");
+//        res.status(200);
+      });
+      app.get("/:z/:x/:y.png", async (req, res) => {
+        const {z,x,y} = req.params;
+        const buffer = await new Promise((res, rej) => {
+          new TestClient(TestClient.defaultTableMapConfig('trees'))
+            .getTile(z, x, y, (err, tile, img, headers, stats) => {
               console.log('err:', err);
               console.log('tile:', tile);
               console.log('img:', img);
               console.log('headers:', headers);
               console.log('stats:', stats);
+              res(Buffer.from(tile, 'binary'));
               img.saveSync('/root/temp/1.png');
-              done();
+              //              done();
             });
+        });
+        console.log("img buffer:", buffer);
+        res.set({'Content-Type': 'image/png'});
+        res.end(buffer);
+//        res.status(200);
+      });
+      app.listen(8000, () => {
+        console.log("listening at 8000...");
+      });
     });
 
     it('response of get tile can be served by renderer cache', function (done) {
