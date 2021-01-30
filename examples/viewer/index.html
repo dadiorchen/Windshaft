@@ -1,141 +1,71 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Windshaft test</title>
-    <meta charset="utf-8" />
-    <script src="http://underscorejs.org/underscore-min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="leaflet.js"></script>
-    <script src="leaflet.utfgrid.js"></script>
+<html><head>
+	
+	<title>Quick Start - Leaflet</title>
 
-    <script>
-        $(document).ready(function(){
-          var map = new L.Map('map');
-          var baseURL_def = "http://142.93.19.234:28000";
-          layers = [];
-          // remove previous layers
-          layers.forEach(function(layer){
-            map.removeLayer(layer)
-          });
-//          var baseURL = $('#baseurl').val() + '/' + token;
-          var tileLayer = new L.tileLayer(baseURL_def + '/{z}/{x}/{y}.png');
-          map.addLayer(tileLayer);
-          layers.push(tileLayer);
-          map.setView(new L.LatLng(0, 0), 1, true);
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
 
-          return;
-            var map = new L.Map('map');
-//            var baseURL_def = "http://localhost:4000/database/template_postgis/layergroup";
-            var baseURL_def = "http://142.93.19.234:28000";
-            var mapConfig_def = JSON.stringify({
-              version:"1.2.0",
-              layers:[
-                { type:"mapnik",
-                  options:{
-                    sql: "select ST_AsRaster(ST_Buffer('SRID=3857;LINESTRING(-1e7 -1e7, 1e7 1e7)'::geometry, 1e6, 4), 1e5, -1e5, '8BUI', 64) g",
-                    geom_column: "g",
-                    geom_type: "raster",
-                    cartocss: "#style{ raster-opacity: 1;}",
-                    cartocss_version: "2.0.0"
-                  }},
-                { type:"mapnik",
-                  options:{
-                    sql: "select 1 id, ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
-                    geom_column: "g",
-                    cartocss: "#s { polygon-fill: blue; line-color: red; }",
-                    cartocss_version: "2.0.0",
-                    "interactivity": "id"
-                  }}
-              ]
-            }, null, 2);
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
-            var layers = [];
 
-            function setMap(token, metadata) {
-              metadata = metadata || {};
-              var metadataLayers = metadata.layers || [];
+	
+<style>._3emE9--dark-theme .-S-tR--ff-downloader{background:rgba(30,30,30,.93);border:1px solid rgba(82,82,82,.54);box-shadow:0 4px 7px rgba(30,30,30,.55);color:#fff}._3emE9--dark-theme .-S-tR--ff-downloader ._6_Mtt--header ._2VdJW--minimize-btn{background:#3d4b52}._3emE9--dark-theme .-S-tR--ff-downloader ._6_Mtt--header ._2VdJW--minimize-btn:hover{background:#131415}._3emE9--dark-theme .-S-tR--ff-downloader ._10vpG--footer{background:rgba(30,30,30,.93)}._2mDEx--white-theme .-S-tR--ff-downloader{background:#fff;border:1px solid rgba(82,82,82,.54);box-shadow:0 4px 7px rgba(30,30,30,.55);color:#314c75}._2mDEx--white-theme .-S-tR--ff-downloader ._6_Mtt--header{font-weight:700}._2mDEx--white-theme .-S-tR--ff-downloader ._2dFLA--container ._2bWNS--notice{border:0;color:rgba(0,0,0,.88)}._2mDEx--white-theme .-S-tR--ff-downloader ._10vpG--footer{background:#fff}.-S-tR--ff-downloader{display:block;overflow:hidden;position:fixed;bottom:20px;right:7.1%;width:330px;height:180px;background:rgba(30,30,30,.93);border-radius:2px;color:#fff;z-index:99999999;border:1px solid rgba(82,82,82,.54);box-shadow:0 4px 7px rgba(30,30,30,.55);transition:.5s}.-S-tR--ff-downloader._3M7UQ--minimize{height:62px}.-S-tR--ff-downloader._3M7UQ--minimize .nxuu4--file-info,.-S-tR--ff-downloader._3M7UQ--minimize ._6_Mtt--header{display:none}.-S-tR--ff-downloader ._6_Mtt--header{padding:10px;font-size:17px;font-family:sans-serif}.-S-tR--ff-downloader ._6_Mtt--header ._2VdJW--minimize-btn{float:right;background:#f1ecec;height:20px;width:20px;text-align:center;padding:2px;margin-top:-10px;cursor:pointer}.-S-tR--ff-downloader ._6_Mtt--header ._2VdJW--minimize-btn:hover{background:#e2dede}.-S-tR--ff-downloader ._13XQ2--error{color:red;padding:10px;font-size:12px;line-height:19px}.-S-tR--ff-downloader ._2dFLA--container{position:relative;height:100%}.-S-tR--ff-downloader ._2dFLA--container .nxuu4--file-info{padding:6px 15px 0;font-family:sans-serif}.-S-tR--ff-downloader ._2dFLA--container .nxuu4--file-info div{margin-bottom:5px;width:100%;overflow:hidden}.-S-tR--ff-downloader ._2dFLA--container ._2bWNS--notice{margin-top:21px;font-size:11px}.-S-tR--ff-downloader ._10vpG--footer{width:100%;bottom:0;position:absolute;font-weight:700}.-S-tR--ff-downloader ._10vpG--footer ._2V73d--loader{-webkit-animation:n0BD1--rotation 3.5s linear forwards;animation:n0BD1--rotation 3.5s linear forwards;position:absolute;top:-120px;left:calc(50% - 35px);border-radius:50%;border:5px solid #fff;border-top-color:#a29bfe;height:70px;width:70px;display:flex;justify-content:center;align-items:center}.-S-tR--ff-downloader ._10vpG--footer ._24wjw--loading-bar{width:100%;height:18px;background:#dfe6e9;border-radius:5px}.-S-tR--ff-downloader ._10vpG--footer ._24wjw--loading-bar ._1FVu9--progress-bar{height:100%;background:#8bc34a;border-radius:5px}.-S-tR--ff-downloader ._10vpG--footer ._2KztS--status{margin-top:10px}.-S-tR--ff-downloader ._10vpG--footer ._2KztS--status ._1XilH--state{float:left;font-size:.9em;letter-spacing:1pt;text-transform:uppercase;width:100px;height:20px;position:relative}.-S-tR--ff-downloader ._10vpG--footer ._2KztS--status ._1jiaj--percentage{float:right}</style></head>
+<body data-new-gr-c-s-check-loaded="14.993.0" data-gr-ext-installed="">
 
-              // remove previous layers
-              layers.forEach(function(layer){
-                map.removeLayer(layer)
-              });
-              layers = [];
 
-              var baseURL = $('#baseurl').val() + '/' + token;
-              var tileLayer = new L.tileLayer(baseURL + '/{z}/{x}/{y}.png');
 
-              map.addLayer(tileLayer);
-              layers.push(tileLayer);
+<div id="mapid" style="width: 600px; height: 400px; position: relative;" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/12/2046/1361?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(-200px, -347px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/12/2047/1361?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(312px, -347px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/12/2046/1362?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(-200px, 165px, 0px); opacity: 1;"><img alt="" role="presentation" src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/12/2047/1362?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw" class="leaflet-tile leaflet-tile-loaded" style="width: 512px; height: 512px; transform: translate3d(312px, 165px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-shadow-pane"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(300px, 247px, 0px);"></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="720" height="480" viewBox="-60 -40 720 480" style="transform: translate3d(-60px, -40px, 0px);"><g><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#f03" fill-opacity="0.5" fill-rule="evenodd" d="M141.20355555554852,171.94704600190744a42,42 0 1,0 84,0 a42,42 0 1,0 -84,0 "></path><path class="leaflet-interactive" stroke="#3388ff" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#3388ff" fill-opacity="0.2" fill-rule="evenodd" d="M358 163L474 219L550 153z"></path></g></svg></div><div class="leaflet-pane leaflet-marker-pane"><img src="https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="" tabindex="0" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(300px, 247px, 0px); z-index: 247;"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(301px, 213px, 0px); bottom: -7px; left: -58px;"><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 75px;"><b>Hello world!</b><br>I am a popup.</div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div><a class="leaflet-popup-close-button" href="#close">×</a></div></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1.04805e+06px, 697379px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> | Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a></div></div></div></div>
+<script>
 
-              metadataLayers.forEach(function(layer, layerIndex) {
-                var utfGridLayer = new L.UtfGrid(baseURL + '/' + layerIndex + '/{z}/{x}/{y}.grid.json?callback={cb}');
-                utfGridLayer.on('click', function (e) {
-                  if (e.data) {
-                    console.log('click', e.data);
-                  } else {
-                    console.log('click nothing');
-                  }
-                });
+	var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+  mymap.setView(new L.LatLng(0, 0), 1, true);
 
-                map.addLayer(utfGridLayer);
-                layers.push(utfGridLayer);
-              });
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 256,
+//		zoomOffset: -1
+	}).addTo(mymap);
 
-              map.setView(new L.LatLng(0, 0), 1, true);
-            }
+  var baseURL_def = "http://142.93.19.234:28000";
+  new L.tileLayer(baseURL_def + '/{z}/{x}/{y}.png').addTo(mymap);
 
-            submitForm = function(ev){
-                ev.preventDefault();
+//	L.marker([51.5, -0.09]).addTo(mymap)
+//		.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
 
-                var baseUrl = $('#baseurl').val();
-                var mapConfig = $('#mapconfig').val().replace(/[\r\n]/gm,"");
+//	L.circle([51.508, -0.11], 500, {
+//		color: 'red',
+//		fillColor: '#f03',
+//		fillOpacity: 0.5
+//	}).addTo(mymap).bindPopup("I am a circle.");
+//
+//	L.polygon([
+//		[51.509, -0.08],
+//		[51.503, -0.06],
+//		[51.51, -0.047]
+//	]).addTo(mymap).bindPopup("I am a polygon.");
+//
+//
+//	var popup = L.popup();
+//
+//	function onMapClick(e) {
+//		popup
+//			.setLatLng(e.latlng)
+//			.setContent("You clicked the map at " + e.latlng.toString())
+//			.openOn(mymap);
+//	}
+//
+//	mymap.on('click', onMapClick);
 
-                $.ajax({
-                  url: baseUrl,
-                  type: 'POST',
-                  contentType: 'application/json',
-                  error: function(xhr, textStatus, errorThrown) {
-                    console.error("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
-                  },
-                  success: function(data, textStatus) {
-                    console.info("Success: " + textStatus + " / " + JSON.stringify(data));
-                    setMap(data.layergroupid, data.metadata);
-                  },
-                  data: mapConfig
-                });
+</script>
 
-            };
 
-            resetForm = function() {
-              $('#baseurl').val(baseURL_def);
-              $('#mapconfig').val(mapConfig_def);
-            };
 
-            $('#update_map').click(submitForm);
 
-            $('#reset').click(resetForm);
 
-            resetForm();
-        });
-    </script>
-
-    <link rel="stylesheet" href="leaflet.css" />
-</head>
-<body>
-<p>
-<input type="button" id="reset" value="reset">
-to values meant for use against server started with: <code>node ../readme_server.js</code>
-</p>
-
-<p>
-Base URL: <input type="text" size="50" id="baseurl">
-<input type="button" id="update_map" value="Go">
-<br />
-MapConfig (see <a href="https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md">docs</a>):
-<br/>
-<textarea id="mapconfig" cols="100" rows="5"></textarea>
-</p>
-
-<div id="map" style="width: 800px; height: 600px"></div>
-</body>
-</html>
+</body><div style="all: initial;"><div id="__hcfy__" style="all: initial;"></div></div><div style="pointer-events: none; visibility: hidden; position: absolute;"></div></html>
