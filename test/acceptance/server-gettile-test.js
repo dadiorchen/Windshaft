@@ -49,7 +49,9 @@ describe('server_gettile', function () {
 //            });
       //express server
       const express = require("express");
+      var cors = require('cors');
       const app = express();
+      app.use(cors());
       app.get("/", async (req, res) => {
         res.send("welcome!");
 //        res.status(200);
