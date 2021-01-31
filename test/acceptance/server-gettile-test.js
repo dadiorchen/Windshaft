@@ -58,20 +58,21 @@ describe('server_gettile', function () {
       });
       app.get("/:z/:x/:y.png", async (req, res) => {
         const {z,x,y} = req.params;
+        console.log("render:",z,x,y);
         const buffer = await new Promise((res, rej) => {
           new TestClient(TestClient.defaultTableMapConfig('trees'))
             .getTile(z, x, y, (err, tile, img, headers, stats) => {
-              console.log('err:', err);
-              console.log('tile:', tile);
-              console.log('img:', img);
-              console.log('headers:', headers);
-              console.log('stats:', stats);
+//              console.log('err:', err);
+//              console.log('tile:', tile);
+//              console.log('img:', img);
+//              console.log('headers:', headers);
+//              console.log('stats:', stats);
               res(Buffer.from(tile, 'binary'));
               img.saveSync('/root/temp/1.png');
               //              done();
             });
         });
-        console.log("img buffer:", buffer);
+//        console.log("img buffer:", buffer);
         res.set({'Content-Type': 'image/png'});
         res.end(buffer);
 //        res.status(200);
