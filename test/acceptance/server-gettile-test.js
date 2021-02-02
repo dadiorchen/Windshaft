@@ -34,7 +34,7 @@ describe('server_gettile', function () {
     });
 
     it.only('first tree tile', function (done) {
-      this.timeout(1000*10*60*60);
+      this.timeout(1000*60*60*24*7);
 //        new TestClient(TestClient.defaultTableMapConfig('trees'))
 //            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
 //        new TestClient(TestClient.defaultTableMapConfig('trees'))
