@@ -77,6 +77,19 @@ describe('server_gettile', function () {
         res.end(buffer);
 //        res.status(200);
       });
+      app.get("/:z/:x/:y.grid.json", async (req, res) => {
+        const {z,x,y} = req.params;
+        console.log("render grid:",z,x,y);
+        const json = await new Promise((res, rej) => {
+          new TestClient(TestClient.defaultTableMapConfig('trees',undefined,undefined,"id"))
+            .getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
+							console.log("tile:", tile);
+              res(tile);
+            });
+        });
+        res.set({'Content-Type': 'application/json'});
+        res.json(json);
+      });
       app.listen(8000, () => {
         console.log("listening at 8000...");
       });

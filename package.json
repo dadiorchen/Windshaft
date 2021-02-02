@@ -37,6 +37,7 @@
         "cartodb-psql": "^0.14.0",
         "cartodb-query-tables": "^0.6.1",
         "debug": "3.1.0",
+        "expect-runtime": "^0.10.1",
         "grainstore": "^3.0.0",
         "redis-mpool": "^0.8.0",
         "request": "2.87.0",

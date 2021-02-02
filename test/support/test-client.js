@@ -13,6 +13,7 @@ const MapBackend = require('../../lib/backends/map');
 const PreviewBackend = require('../../lib/backends/preview');
 const DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const config = require('./config');
+const expect = require("expect-runtime");
 var redisClient = require('redis').createClient(config.redis.port);
 
 function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
@@ -174,6 +175,8 @@ var DEFAULT_POINT_STYLE = [
 ].join('');
 
 function singleLayerMapConfig (sql, cartocss, cartocssVersion, interactivity, attributes) {
+  console.log("interactivity:", interactivity);
+//    expect( interactivity).a("string");
     return {
         version: '1.3.0',
         layers: [

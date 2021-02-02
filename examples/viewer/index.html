@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="./L.UTFGrid-min.js" ></script>
 
 
 	
@@ -34,6 +35,19 @@
 
   var baseURL_def = "http://142.93.19.234:8000";
   new L.tileLayer(baseURL_def + '/{z}/{x}/{y}.png').addTo(mymap);
+  var utfGridLayer = new L.utfGrid(baseURL_def + '/{z}/{x}/{y}.grid.json');
+  utfGridLayer.on('click', function (e) {
+    console.log("e:", e);
+    if (e.data) {
+      console.log('click', e.data);
+//      mymap.panTo(e.latlng);
+      mymap.setView(e.latlng, mymap.getZoom() + 2);
+    } else {
+      console.log('click nothing');
+    }
+  });
+  utfGridLayer.addTo(mymap);
+//  mymap.addLayer(utfGridLayer);
 
 //	L.marker([51.5, -0.09]).addTo(mymap)
 //		.bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
