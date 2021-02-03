@@ -85,65 +85,65 @@ describe("test", () => {
 
   it.only("test", function(done){
     const mapConfig = {
-        version: '1.3.0',
-        layers: [
-            {
-                type: 'mapnik',
-                options: {
-                    sql: "SELECT * FROM trees",
-                    cartocss: DEFAULT_POINT_STYLE,
-                    cartocss_version: '2.3.0',
-                    interactivity: "id",
-                    attributes: undefined
-                }
-            }
-        ]
+      version: '1.3.0',
+      layers: [
+        {
+          type: 'mapnik',
+          options: {
+            sql: "SELECT * FROM trees",
+            cartocss: DEFAULT_POINT_STYLE,
+            cartocss_version: '2.3.0',
+            interactivity: "id",
+            attributes: undefined
+          }
+        }
+      ]
     }
 
-  const redisPool = new RedisPool({
-        host: '127.0.0.1',
-        port: 6334,
-        idleTimeoutMillis: 1,
-        reapIntervalMillis: 1
+    const redisPool = new RedisPool({
+      host: "172.17.0.3",
+      port: 6379,
+      idleTimeoutMillis: 1,
+      reapIntervalMillis: 1
     });
-  const configCreated = MapConfig.create(mapConfig);
-  const rendererOptions = {
-    grainstore: config.renderer.mapnik.grainstore,
-    renderer: config.renderer.mapnik,
-  }
-
-  const mapClientB = factory({
-    rendererOptions,
-    redisPool,
-    onTileErrorStrategy: () => {console.warn("onTileErrorStrategy!")},
-  });
-  function getTile(z, x, y, options, callback) {
-    if (!callback) {
-      callback = options;
-      options = {};
-    }
-    var params = Object.assign({
-      dbname: 'windshaft_test',
-      layer: 'all',
-      format: 'png',
-      z: z,
-      x: x,
-      y: y
-    }, options);
-
-    if (params.format === 'grid.json') {
-      params.token = 'wadus';
+    const configCreated = MapConfig.create(mapConfig);
+    const rendererOptions = {
+      grainstore: config.renderer.mapnik.grainstore,
+      renderer: config.renderer.mapnik,
     }
 
-    var provider = new DummyMapConfigProvider(configCreated, params);
-    mapClientB.tileBackend.getTile(provider, params, function (err, tile, headers, stats) {
-      var img;
-      if (!err && tile && params.format === 'png') {
-        img = mapnik.Image.fromBytesSync(Buffer.from(tile, 'binary'));
+    const mapClientB = factory({
+      rendererOptions,
+      redisPool,
+      onTileErrorStrategy: () => {console.warn("onTileErrorStrategy!")},
+    });
+    function getTile(z, x, y, options, callback) {
+      if (!callback) {
+        callback = options;
+        options = {};
       }
-      return callback(err, tile, img, headers, stats);
-    });
-  };
+      var params = Object.assign({
+        dbname: 'windshaft_test',
+        layer: 'all',
+        format: 'png',
+        z: z,
+        x: x,
+        y: y
+      }, options);
+
+      if (params.format === 'grid.json') {
+        params.token = 'wadus';
+      }
+
+      var provider = new DummyMapConfigProvider(configCreated, params);
+      mapClientB.tileBackend.getTile(provider, params, function (err, tile, headers, stats) {
+        var img;
+        if (!err && tile && params.format === 'png') {
+          img = mapnik.Image.fromBytesSync(Buffer.from(tile, 'binary'));
+        }
+        return callback(err, tile, img, headers, stats);
+      });
+    };
 
     console.log("server...");
     this.timeout(1000*60*60*24*7);
@@ -160,10 +160,10 @@ describe("test", () => {
       const {z,x,y} = req.params;
       console.log("render:",z,x,y);
       const buffer = await new Promise((res, rej) => {
-          getTile(z, x, y, (err, tile, img, headers, stats) => {
-            res(Buffer.from(tile, 'binary'));
-            img.saveSync('/root/temp/1.png');
-          });
+        getTile(z, x, y, (err, tile, img, headers, stats) => {
+          res(Buffer.from(tile, 'binary'));
+          img.saveSync('/root/temp/1.png');
+        });
       });
       res.set({'Content-Type': 'image/png'});
       res.end(buffer);
@@ -172,10 +172,10 @@ describe("test", () => {
       const {z,x,y} = req.params;
       console.log("render grid:",z,x,y);
       const json = await new Promise((res, rej) => {
-          getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
-            console.log("tile:", tile);
-            res(tile);
-          });
+        getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
+          console.log("tile:", tile);
+          res(tile);
+        });
       });
       res.set({'Content-Type': 'application/json'});
       res.json(json);
