@@ -128,7 +128,13 @@ describe("test", () => {
         format: 'png',
         z: z,
         x: x,
-        y: y
+        y: y,
+        datasource: {
+          user: "postgres",
+          host: "172.17.0.3",
+          port: 5432,
+          password: "mysecretpassword",
+        }
       }, options);
 
       if (params.format === 'grid.json') {
@@ -145,12 +151,12 @@ describe("test", () => {
       });
     };
 
-//        getTile(1, 1, 1, (err, tile, img, headers, stats) => {
-//          if(err) console.error("err:", err);
-//          console.log("result:", tile);
-//          done();
-//        });
-//    return
+    getTile(1, 1, 1, (err, tile, img, headers, stats) => {
+      if(err) console.error("err:", err);
+      console.log("result:", tile);
+      done();
+    });
+    return
 
     console.log("server...");
     this.timeout(1000*60*60*24*7);
