@@ -115,7 +115,7 @@ describe("test", () => {
     const mapClientB = factory({
       rendererOptions,
       redisPool,
-      onTileErrorStrategy: () => {console.warn("onTileErrorStrategy!")},
+      onTileErrorStrategy: (...args) => {console.warn("onTileErrorStrategy!",...args)},
     });
     function getTile(z, x, y, options, callback) {
       if (!callback) {
@@ -123,7 +123,7 @@ describe("test", () => {
         options = {};
       }
       var params = Object.assign({
-        dbname: 'windshaft_test',
+        dbname: 'postgres',
         layer: 'all',
         format: 'png',
         z: z,
@@ -145,6 +145,13 @@ describe("test", () => {
       });
     };
 
+//        getTile(1, 1, 1, (err, tile, img, headers, stats) => {
+//          if(err) console.error("err:", err);
+//          console.log("result:", tile);
+//          done();
+//        });
+//    return
+
     console.log("server...");
     this.timeout(1000*60*60*24*7);
     //express server
@@ -161,8 +168,8 @@ describe("test", () => {
       console.log("render:",z,x,y);
       const buffer = await new Promise((res, rej) => {
         getTile(z, x, y, (err, tile, img, headers, stats) => {
+          if(err) console.error("err:", err);
           res(Buffer.from(tile, 'binary'));
-          img.saveSync('/root/temp/1.png');
         });
       });
       res.set({'Content-Type': 'image/png'});
