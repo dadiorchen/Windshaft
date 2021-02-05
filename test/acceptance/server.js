@@ -1,11 +1,9 @@
 var RedisPool = require('redis-mpool');
-const MapConfig = require('../../lib/models/mapconfig');
 const path = require('path');
 var mapnik = require('@carto/mapnik');
 
 const {factory, model} = require("../../lib/index");
 
-const DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const config = {
     millstone: {
         cache_basedir: '/tmp/windshaft-test/millstone'
@@ -106,7 +104,7 @@ describe("test", () => {
       idleTimeoutMillis: 1,
       reapIntervalMillis: 1
     });
-    const configCreated = MapConfig.create(mapConfig);
+    const configCreated = model.MapConfig.create(mapConfig);
     const rendererOptions = {
       grainstore: config.renderer.mapnik.grainstore,
       renderer: config.renderer.mapnik,
@@ -141,7 +139,7 @@ describe("test", () => {
         params.token = 'wadus';
       }
 
-      var provider = new DummyMapConfigProvider(configCreated, params);
+      var provider = new model.DummyMapConfigProvider(configCreated, params);
       mapClientB.tileBackend.getTile(provider, params, function (err, tile, headers, stats) {
         var img;
         if (!err && tile && params.format === 'png') {
