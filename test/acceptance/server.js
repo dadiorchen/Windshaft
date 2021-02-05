@@ -25,7 +25,11 @@ const config = {
                 },
                 datasource: {
                     geometry_field: 'the_geom',
-                    srid: 4326
+                    srid: 4326,
+                    user: "postgres",
+                    host: "172.17.0.3",
+                    port: 5432,
+                    password: "mysecretpassword",
                 },
                 cachedir: '/tmp/windshaft-test/millstone',
                 mapnik_version: mapnik.versions.mapnik
@@ -122,17 +126,18 @@ describe("test", () => {
       }
       var params = Object.assign({
         dbname: 'postgres',
+//        dbname: 'windshaft_test',
         layer: 'all',
         format: 'png',
         z: z,
         x: x,
         y: y,
-        datasource: {
-          user: "postgres",
-          host: "172.17.0.3",
-          port: 5432,
-          password: "mysecretpassword",
-        }
+//        datasource: {
+//          user: "postgres",
+//          host: "172.17.0.3",
+//          port: 5432,
+//          password: "mysecretpassword",
+//        }
       }, options);
 
       if (params.format === 'grid.json') {
@@ -149,12 +154,12 @@ describe("test", () => {
       });
     };
 
-    getTile(1, 1, 1, (err, tile, img, headers, stats) => {
-      if(err) console.error("err:", err);
-      console.log("result:", tile);
-      done();
-    });
-    return
+//    getTile(1, 1, 1, (err, tile, img, headers, stats) => {
+//      if(err) console.error("err:", err);
+//      console.log("result:", tile);
+//      done();
+//    });
+//    return
 
     console.log("server...");
     this.timeout(1000*60*60*24*7);
@@ -184,7 +189,6 @@ describe("test", () => {
       console.log("render grid:",z,x,y);
       const json = await new Promise((res, rej) => {
         getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
-          console.log("tile:", tile);
           res(tile);
         });
       });

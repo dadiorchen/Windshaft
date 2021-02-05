@@ -83,7 +83,6 @@ describe('server_gettile', function () {
         const json = await new Promise((res, rej) => {
           new TestClient(TestClient.defaultTableMapConfig('trees',undefined,undefined,"id"))
             .getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
-							console.log("tile:", tile);
               res(tile);
             });
         });
