@@ -23,13 +23,76 @@ describe('server_gettile', function () {
 
     /// /////////////////////////////////////////////////////////////////
     //
-    // GET TILE
-    // --{
+    // GET TILE --{
     /// /////////////////////////////////////////////////////////////////
 
-    it("get'ing a tile with default style should return an expected tile", function (done) {
+    it('geting a tile with default style should return an expected tile',
+      function (done) {
+        console.log('TestClient:', TestClient);
         new TestClient(TestClient.defaultTableMapConfig('test_table'))
             .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
+    });
+
+    it.skip('first tree tile', function (done) {
+      this.timeout(1000*60*60*24*7);
+//        new TestClient(TestClient.defaultTableMapConfig('trees'))
+//            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
+//        new TestClient(TestClient.defaultTableMapConfig('trees'))
+//            .getTile(1, 1, 0, (err, tile, img, headers, stats) => {
+//              console.log('err:', err);
+//              console.log('tile:', tile);
+//              console.log('img:', img);
+//              console.log('headers:', headers);
+//              console.log('stats:', stats);
+//              img.saveSync('/root/temp/1.png');
+////              done();
+//            });
+      //express server
+      const express = require("express");
+      var cors = require('cors');
+      const app = express();
+      app.use(cors());
+      app.get("/", async (req, res) => {
+        res.send("welcome!");
+//        res.status(200);
+      });
+      app.get("/:z/:x/:y.png", async (req, res) => {
+        const {z,x,y} = req.params;
+        console.log("render:",z,x,y);
+        const buffer = await new Promise((res, rej) => {
+          new TestClient(TestClient.defaultTableMapConfig('trees'))
+            .getTile(z, x, y, (err, tile, img, headers, stats) => {
+//              console.log('err:', err);
+//              console.log('tile:', tile);
+//              console.log('img:', img);
+//              console.log('headers:', headers);
+//              console.log('stats:', stats);
+              res(Buffer.from(tile, 'binary'));
+              img.saveSync('/root/temp/1.png');
+              //              done();
+            });
+        });
+//        console.log("img buffer:", buffer);
+        res.set({'Content-Type': 'image/png'});
+        res.end(buffer);
+//        res.status(200);
+      });
+      app.get("/:z/:x/:y.grid.json", async (req, res) => {
+        const {z,x,y} = req.params;
+        console.log("render grid:",z,x,y);
+        const json = await new Promise((res, rej) => {
+          new TestClient(TestClient.defaultTableMapConfig('trees',undefined,undefined,"id"))
+            .getTile(z, x, y, { layer: 0, format: 'grid.json' },(err, tile, img, headers, stats) => {
+							console.log("tile:", tile);
+              res(tile);
+            });
+        });
+        res.set({'Content-Type': 'application/json'});
+        res.json(json);
+      });
+      app.listen(8000, () => {
+        console.log("listening at 8000...");
+      });
     });
 
     it('response of get tile can be served by renderer cache', function (done) {

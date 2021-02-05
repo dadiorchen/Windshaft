@@ -9,8 +9,8 @@ module.exports = {
         cache_basedir: '/tmp/windshaft-test/millstone'
     },
     redis: {
-        host: '127.0.0.1',
-        port: 6334,
+        host: '172.17.0.3',
+        port: 6379,
         idleTimeoutMillis: 1,
         reapIntervalMillis: 1
     },
